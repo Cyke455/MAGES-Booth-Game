@@ -1,16 +1,23 @@
-using System;
-using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.LowLevel;
 using UnityEngine.UI;
 
 public class BarUI : MonoBehaviour
 {
-    private Vector2 velocity = Vector2.zero;
-
     float SpeedValue;
+    float MaxValue;
 
+    
+    [SerializeField] private float barSpeed;
     [SerializeField] private Image SpeedMeterBar;
+
+    void OnEnable()
+    {
+        SpeedBar.OnSpeedUpdate += UpdateBarValue;
+    }
+    void OnDisable()
+    {
+        SpeedBar.OnSpeedUpdate -= UpdateBarValue;
+    }
 
     void Update()
     {
@@ -24,10 +31,13 @@ public class BarUI : MonoBehaviour
 
     void UpdateBarMeter()
     {
-        float barWidth = (SpeedValue / 100); // 100 is max
+        MaxValue = 150; // temp
+        float barWidth = (SpeedValue / MaxValue); 
 
         RectTransform rectTransform = SpeedMeterBar.GetComponent<RectTransform>();
-        Vector2 currentBarSize = new Vector2(rectTransform.rect.width, rectTransform.rect.height);
-        SpeedMeterBar.rectTransform.sizeDelta = Vector2.SmoothDamp(currentBarSize, new Vector2(barWidth * 400, 70), ref velocity, 0.1f);
+        //Vector2 currentBarSize = new Vector2(rectTransform.rect.width, rectTransform.rect.height);
+
+        float alpha = 1f - Mathf.Exp(-Time.deltaTime / barSpeed);
+        SpeedMeterBar.rectTransform.sizeDelta = Vector2.Lerp(rectTransform.rect.size, new Vector2(barWidth * 400, rectTransform.rect.height), alpha);
     }
 }

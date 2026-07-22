@@ -548,6 +548,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpeedBar
   SpeedValue: 10
   speedDecay: 0.4
+  SpeedDecayTime: 0.1
   speedIncrease: 1
   SpeedDecreaseToggle: 0
 --- !u!4 &1578796749
@@ -693,6 +694,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdf37ee529ce94946b3d8bd11e6d76ad, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BarUI
+  barSpeed: 0.25
   SpeedMeterBar: {fileID: 35752812}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
