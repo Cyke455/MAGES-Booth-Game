@@ -4,11 +4,13 @@ using UnityEngine.UI;
 public class BarUI : MonoBehaviour
 {
     float SpeedValue;
-    float MaxValue;
 
-    
+    [SerializeField] private GameManager gameManager;
+
     [SerializeField] private float barSpeed;
     [SerializeField] private Image SpeedMeterBar;
+    [SerializeField] private float MaxValue;
+    [SerializeField] private float barWidthPixels = 1200;
 
     void OnEnable()
     {
@@ -31,13 +33,12 @@ public class BarUI : MonoBehaviour
 
     void UpdateBarMeter()
     {
-        MaxValue = 150; // temp
-        float barWidth = (SpeedValue / MaxValue); 
+        MaxValue = gameManager.winSpeed;
 
+        float barWidth = barWidthPixels - (SpeedValue / MaxValue) * barWidthPixels;
         RectTransform rectTransform = SpeedMeterBar.GetComponent<RectTransform>();
-        //Vector2 currentBarSize = new Vector2(rectTransform.rect.width, rectTransform.rect.height);
-
         float alpha = 1f - Mathf.Exp(-Time.deltaTime / barSpeed);
-        SpeedMeterBar.rectTransform.sizeDelta = Vector2.Lerp(rectTransform.rect.size, new Vector2(barWidth * 400, rectTransform.rect.height), alpha);
+
+        SpeedMeterBar.rectTransform.sizeDelta = Vector2.Lerp(rectTransform.rect.size, new Vector2(barWidth, rectTransform.rect.height), alpha);
     }
 }

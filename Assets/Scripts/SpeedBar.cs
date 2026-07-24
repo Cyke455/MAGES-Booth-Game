@@ -5,15 +5,23 @@ using UnityEngine.InputSystem;
 
 public class SpeedBar : MonoBehaviour
 {
+    // Events
     public static event Action<float> OnSpeedUpdate;
+    public static event Action OnKeyPressed;
+
 
     public PlayerInputActions InputActions;
-    public float SpeedValue = 100;
 
+    public float SpeedValue;
+    public bool GameActive = true;
+
+    [SerializeField] private GameManager gameManager;
 
     [SerializeField] private float speedDecay = 0.35f;
     [SerializeField] private float SpeedDecayTime = 0.1f;
     [SerializeField] private float speedIncrease = 0f;
+
+    
 
     public bool SpeedDecreaseToggle = true;
     private bool SpeedDecreased = false;
@@ -43,8 +51,17 @@ public class SpeedBar : MonoBehaviour
 
     void OnInteract(InputAction.CallbackContext context)
     {
-        Debug.Log("Interact triggered!");
+        if (!GameActive) return;
+
         SpeedIncrease();
+        OnKeyPressed?.Invoke();
+    }
+
+    public void ResetSpeed()
+    {
+        SpeedValue = 0f;
+        SpeedDecreased = false;
+        OnSpeedUpdate?.Invoke(SpeedValue);
     }
 
     void SpeedDecrease()
@@ -57,6 +74,7 @@ public class SpeedBar : MonoBehaviour
     {
         SpeedValue = Mathf.Max(SpeedValue + speedIncrease, 0);
         OnSpeedUpdate?.Invoke(SpeedValue);
+        if (SpeedValue >= gameManager.winSpeed) gameManager.StageClear(); 
     }
 
     IEnumerator SpeedDecay()
@@ -64,8 +82,9 @@ public class SpeedBar : MonoBehaviour
         while (true)
         {
             yield return new WaitForSeconds(SpeedDecayTime);
-            if (SpeedDecreaseToggle && !SpeedDecreased)
+            if (GameActive && SpeedDecreaseToggle && !SpeedDecreased)
             {
+                speedDecay = (0.1f * gameManager.gameDifficulty);
                 SpeedDecrease();
             }
         }
