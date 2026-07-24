@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using UnityEngine;
 
 public enum GameState { Menu, Playing, Results }
@@ -48,34 +49,13 @@ public class GameManager : MonoBehaviour
     {
         timer.StopTimer();
         gameDifficulty += 1;
-        Debug.Log("Hermes reached the end! Increasing the difficulty");
+        Debug.Log("Hermes reached the end! Increasing the difficulty to " + gameDifficulty);
         StartGame(false);
     }
 
     public void StartGame(Boolean restartGame)
     {
-
-        speedBar.GameActive = false;
-        hermes.GameActive = false;
-        scoreManager.GameActive = false;
-
-        if (restartGame) {
-            gameDifficulty = 1;
-            scoreManager.ResetScore();
-        }
-        hermes.ResetHermes();
-
-        // countdown here
-
-        speedBar.ResetSpeed();
-        speedBar.GameActive = true;
-        hermes.GameActive = true;
-        scoreManager.GameActive = true;
-
-        timer.StartTimer();
-        State = GameState.Playing;
-
-        ShowOnly(hudScreen);
+        StartCoroutine(ContinueGame(restartGame));
     }
 
     void HandleGameEnd()
@@ -125,4 +105,34 @@ public class GameManager : MonoBehaviour
     {
         if (screen != null) screen.SetActive(active);
     }
+
+    IEnumerator ContinueGame(bool restartGame)
+    {
+        speedBar.GameActive = false;
+        hermes.GameActive = false;
+        scoreManager.GameActive = false;
+        if (restartGame) 
+        {
+            gameDifficulty = 1;
+            scoreManager.ResetScore();
+        } 
+        else
+        {
+            yield return new WaitForSeconds(3);
+        }
+        hermes.ResetHermes();
+
+        // countdown here
+
+        speedBar.ResetSpeed();
+        speedBar.GameActive = true;
+        hermes.GameActive = true;
+        scoreManager.GameActive = true;
+
+        timer.StartTimer();
+        State = GameState.Playing;
+
+        ShowOnly(hudScreen);
+    }
 }
+

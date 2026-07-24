@@ -6,7 +6,7 @@ using UnityEngine.InputSystem;
 public class SpeedBar : MonoBehaviour
 {
     // Events
-    public static event Action<float> OnSpeedUpdate;
+    public static event Action<float, bool> OnSpeedUpdate;
     public static event Action OnKeyPressed;
 
 
@@ -46,7 +46,7 @@ public class SpeedBar : MonoBehaviour
 
     void Start()
     {
-        OnSpeedUpdate?.Invoke(SpeedValue);
+        OnSpeedUpdate?.Invoke(SpeedValue, false);
     }
 
     void OnInteract(InputAction.CallbackContext context)
@@ -61,19 +61,19 @@ public class SpeedBar : MonoBehaviour
     {
         SpeedValue = 0f;
         SpeedDecreased = false;
-        OnSpeedUpdate?.Invoke(SpeedValue);
+        OnSpeedUpdate?.Invoke(SpeedValue, true);
     }
 
     void SpeedDecrease()
     {
         SpeedValue = Mathf.Max(SpeedValue - speedDecay, 0);
-        OnSpeedUpdate?.Invoke(SpeedValue);
+        OnSpeedUpdate?.Invoke(SpeedValue, false);
     }
 
     void SpeedIncrease()
     {
         SpeedValue = Mathf.Max(SpeedValue + speedIncrease, 0);
-        OnSpeedUpdate?.Invoke(SpeedValue);
+        OnSpeedUpdate?.Invoke(SpeedValue, false);
         if (SpeedValue >= gameManager.winSpeed) gameManager.StageClear(); 
     }
 

@@ -23,21 +23,24 @@ public class BarUI : MonoBehaviour
 
     void Update()
     {
-        UpdateBarMeter();
+        UpdateBarMeter(false);
     }
 
-    void UpdateBarValue(float newValue)
+    void UpdateBarValue(float newValue, bool instantUpdate)
     {
         SpeedValue = newValue;
+        if (instantUpdate) UpdateBarMeter(true);
     }
 
-    void UpdateBarMeter()
+    void UpdateBarMeter(bool instantUpdate)
     {
         MaxValue = gameManager.winSpeed;
 
         float barWidth = barWidthPixels - (SpeedValue / MaxValue) * barWidthPixels;
         RectTransform rectTransform = SpeedMeterBar.GetComponent<RectTransform>();
         float alpha = 1f - Mathf.Exp(-Time.deltaTime / barSpeed);
+
+        if (instantUpdate) alpha = 1;
 
         SpeedMeterBar.rectTransform.sizeDelta = Vector2.Lerp(rectTransform.rect.size, new Vector2(barWidth, rectTransform.rect.height), alpha);
     }

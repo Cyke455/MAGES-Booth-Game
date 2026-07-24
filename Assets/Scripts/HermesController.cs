@@ -36,7 +36,7 @@ public class HermesController : MonoBehaviour
         Move(currentSpeedValue * speedMultiplier * Time.deltaTime);
     }
 
-    void HandleSpeedUpdate(float newValue)
+    void HandleSpeedUpdate(float newValue, bool instantUpdate)
     {
         currentSpeedValue = newValue;
     }
