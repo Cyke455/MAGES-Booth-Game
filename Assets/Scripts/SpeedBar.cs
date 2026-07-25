@@ -84,7 +84,7 @@ public class SpeedBar : MonoBehaviour
             yield return new WaitForSeconds(SpeedDecayTime);
             if (GameActive && SpeedDecreaseToggle && !SpeedDecreased)
             {
-                speedDecay = (0.1f * gameManager.gameDifficulty);
+                speedDecay = 0.9f+(0.1f * gameManager.gameDifficulty);
                 SpeedDecrease();
             }
         }

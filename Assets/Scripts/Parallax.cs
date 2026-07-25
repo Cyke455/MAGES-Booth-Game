@@ -21,6 +21,6 @@ public class Parallax : MonoBehaviour
 
         currentScroll += scrollSpeed * newSpeed * Time.deltaTime;
         currentScroll = currentScroll%1920;
-        transform.localPosition =  new Vector3(960-currentScroll, 0);
+        transform.localPosition =  new Vector3(960-currentScroll, transform.localPosition.y);
     }
 }
