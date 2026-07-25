@@ -48,8 +48,9 @@ public class GameManager : MonoBehaviour
     public void StageClear()
     {
         timer.StopTimer();
-        gameDifficulty += 1;
-        Debug.Log("Hermes reached the end! Increasing the difficulty to " + gameDifficulty);
+
+        Debug.Log("Hermes reached the end! Increasing the difficulty to " + (gameDifficulty+1));
+    
         StartGame(false);
     }
 
@@ -119,6 +120,7 @@ public class GameManager : MonoBehaviour
         else
         {
             yield return new WaitForSeconds(3);
+            gameDifficulty += 1;
         }
         hermes.ResetHermes();
 
