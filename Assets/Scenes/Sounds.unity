@@ -189,7 +189,7 @@ MonoBehaviour:
     pitch: 1
     volumeVariance: 0
     pitchVariance: 0
-    loop: 1
+    loop: 0
   - type: 2
     clips:
     - {fileID: 8300000, guid: c3d7674dc95f47d488feab7cb38a69c3, type: 3}
@@ -201,20 +201,44 @@ MonoBehaviour:
   - type: 3
     clips:
     - {fileID: 8300000, guid: a1e0f5f3d2c309b4b890e60e20500145, type: 3}
-    volume: 0.58
+    volume: 0.28
     pitch: 0.6
     volumeVariance: 0
     pitchVariance: 0.2
     loop: 0
   - type: 5
     clips:
-    - {fileID: 8300000, guid: a7c33c7c08b38fa4aab90ea657e6c211, type: 3}
+    - {fileID: 8300000, guid: 1fe923a170c09bc4e906555a47e18206, type: 3}
     volume: 0.3
-    pitch: 1.5
+    pitch: 2
     volumeVariance: 0
     pitchVariance: 0.2
     loop: 1
-  sfxPoolSize: 16
+  - type: 1
+    clips:
+    - {fileID: 8300000, guid: add3e8cf5777a6e4d8680948b9069a00, type: 3}
+    volume: 0.3
+    pitch: 1
+    volumeVariance: 0
+    pitchVariance: 0
+    loop: 1
+  - type: 6
+    clips:
+    - {fileID: 8300000, guid: 9864af34efc46b148a0e10206ab62ce2, type: 3}
+    volume: 0.3
+    pitch: 1
+    volumeVariance: 0
+    pitchVariance: 0.2
+    loop: 1
+  - type: 7
+    clips:
+    - {fileID: 8300000, guid: 0f429c9140355cb4babc00900eb366f0, type: 3}
+    volume: 0.3
+    pitch: 1
+    volumeVariance: 0
+    pitchVariance: 0.2
+    loop: 1
+  sfxPoolSize: 19
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0

@@ -17,7 +17,13 @@ public enum SoundType
     Run,
 
     // Ambience
-    Wind
+    Wind,
+
+    // Lose
+    Lose,
+
+    // Win
+    Win
 }
 
 [System.Serializable]
@@ -60,6 +66,7 @@ public class SoundManager : MonoBehaviour
     // private AudioSource ambienceSource;
 
     private AudioSource[] sfxPool;
+    private SoundType? currentMusic = null;
 
     private void Awake()
     {
@@ -169,6 +176,11 @@ public class SoundManager : MonoBehaviour
 
     public void PlayMusic(SoundType type)
     {
+        if (currentMusic == type && musicSource.isPlaying)
+            return;
+
+        currentMusic = type;
+        
         Sound sound = GetSound(type);
 
         if (sound == null)
@@ -188,6 +200,10 @@ public class SoundManager : MonoBehaviour
 
     public void CrossFadeMusic(SoundType nextSong, float duration)
     {
+        if (currentMusic == nextSong)
+            return;
+
+        currentMusic = nextSong;
         StartCoroutine(CrossFade(nextSong, duration));
     }
 
@@ -202,6 +218,7 @@ public class SoundManager : MonoBehaviour
 
         newSource.clip = GetRandomClip(sound);
         newSource.loop = true;
+        newSource.pitch = sound.pitch;
         newSource.volume = 0;
         newSource.Play();
 
