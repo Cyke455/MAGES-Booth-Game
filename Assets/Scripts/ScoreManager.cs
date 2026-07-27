@@ -8,10 +8,10 @@ public class ScoreManager : MonoBehaviour
     [SerializeField] private TMP_Text scoreText;
 
     [Header("Scoring Weights")]
-    [SerializeField] private float pointsPerPress = 10f;
-    [SerializeField] private float pointsPerDistance = 5f;
-    [SerializeField] private float comboBonusThresholdPPS = 5f;
-    [SerializeField] private float comboBonusPointsPerPress = 2f;
+    [SerializeField] private float pointsPerPress = 3f;
+    [SerializeField] private float pointsPerDistance = 2f;
+    [SerializeField] private float comboBonusThresholdPPS = 6f;
+    [SerializeField] private float comboBonusPointsPerPress = 1f;
 
     public bool GameActive = true;
     public int TotalPresses { get; private set; }

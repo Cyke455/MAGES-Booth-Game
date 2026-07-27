@@ -51,8 +51,7 @@ public class SpeedBar : MonoBehaviour
 
     void OnInteract(InputAction.CallbackContext context)
     {
-        if (!GameActive) return;
-
+        if (!GameActive || !context.ReadValueAsButton()) return;
         SpeedIncrease();
         OnKeyPressed?.Invoke();
     }
@@ -72,7 +71,7 @@ public class SpeedBar : MonoBehaviour
 
     void SpeedIncrease()
     {
-        SpeedValue = Mathf.Max(SpeedValue + speedIncrease, 0);
+        SpeedValue = Mathf.Clamp(SpeedValue + speedIncrease, 0, gameManager.winSpeed);
         OnSpeedUpdate?.Invoke(SpeedValue, false);
         if (SpeedValue >= gameManager.winSpeed) gameManager.StageClear(); 
     }

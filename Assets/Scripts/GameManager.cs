@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameTimer timer;
     [SerializeField] private ScoreManager scoreManager;
     [SerializeField] private LeaderboardManager leaderboard;
+    [SerializeField] private CountdownDisplay countdownDisplay;
 
     [Header("UI Screens")]
     [SerializeField] private GameObject menuScreen;
@@ -28,6 +29,9 @@ public class GameManager : MonoBehaviour
 
     public GameState State { get; private set; }
     public float FinalAveragePPS { get; private set; }
+
+    private bool isTransitioning;
+    private bool nameSubmitted;
 
     void OnEnable()
     {
@@ -43,6 +47,7 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Menu;
         ShowOnly(menuScreen);
+        SoundManager.Instance?.PlayMusic(SoundType.Theme);
     }
 
     public void StageClear()
@@ -56,6 +61,8 @@ public class GameManager : MonoBehaviour
 
     public void StartGame(Boolean restartGame)
     {
+        if (isTransitioning) return;
+
         StartCoroutine(ContinueGame(restartGame));
     }
 
@@ -67,12 +74,17 @@ public class GameManager : MonoBehaviour
         FinalAveragePPS = scoreManager.AveragePPS();
         scoreManager.GameActive = false;
 
+        nameSubmitted = false;
         State = GameState.Results;
         ShowOnly(nameEntryScreen);
+        SoundManager.Instance?.CrossFadeMusic(SoundType.Theme, 1f);
     }
 
     public void SubmitName(string playerName)
     {
+        if (nameSubmitted || State != GameState.Results) return;
+        nameSubmitted = true;
+
         leaderboard.AddEntry(playerName, scoreManager.Score, scoreManager.TotalPresses, hermes.DistanceTraveled);
         ShowOnly(resultsScreen);
     }
@@ -84,8 +96,11 @@ public class GameManager : MonoBehaviour
 
     public void ShowMainMenu()
     {
+        if (isTransitioning) return;
+
         State = GameState.Menu;
         ShowOnly(menuScreen);
+        SoundManager.Instance?.PlayMusic(SoundType.Theme);
     }
 
     public void ShowLeaderboard()
@@ -109,32 +124,49 @@ public class GameManager : MonoBehaviour
 
     IEnumerator ContinueGame(bool restartGame)
     {
-        speedBar.GameActive = false;
-        hermes.GameActive = false;
-        scoreManager.GameActive = false;
-        if (restartGame) 
+        isTransitioning = true;
+        try
         {
-            gameDifficulty = 1;
-            scoreManager.ResetScore();
-        } 
-        else
-        {
-            yield return new WaitForSeconds(3);
-            gameDifficulty += 1;
+            speedBar.GameActive = false;
+            hermes.GameActive = false;
+            scoreManager.GameActive = false;
+            if (restartGame)
+            {
+                gameDifficulty = 1;
+                scoreManager.ResetScore();
+            }
+            else
+            {
+                yield return new WaitForSeconds(3);
+                gameDifficulty += 1;
+            }
+            hermes.ResetHermes();
+
+            ShowOnly(hudScreen);
+
+            speedBar.ResetSpeed();
+
+            countdownDisplay.DisplayNumber(0);
+            yield return new WaitForSeconds(1);
+            countdownDisplay.DisplayNumber(1);
+            yield return new WaitForSeconds(1);
+            countdownDisplay.DisplayNumber(2);
+            yield return new WaitForSeconds(1);
+            countdownDisplay.DisplayStart();
+            
+            speedBar.GameActive = true;
+            hermes.GameActive = true;
+            scoreManager.GameActive = true;
+            timer.StartTimer();
+            State = GameState.Playing;
+
+            
+            SoundManager.Instance?.CrossFadeMusic(SoundType.GameplayTheme, 1f);
         }
-        hermes.ResetHermes();
-
-        // countdown here
-
-        speedBar.ResetSpeed();
-        speedBar.GameActive = true;
-        hermes.GameActive = true;
-        scoreManager.GameActive = true;
-
-        timer.StartTimer();
-        State = GameState.Playing;
-
-        ShowOnly(hudScreen);
+        finally
+        {
+            isTransitioning = false;
+        }
     }
 }
 
