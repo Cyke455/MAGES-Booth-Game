@@ -55,6 +55,9 @@ public class HermesController : MonoBehaviour
         if (!GameActive) return;
 
         Move(distancePerPress);
+
+        SoundManager.Instance.PlaySFX(SoundType.Run);
+        SoundManager.Instance.PlaySFX(SoundType.Wind);
     }
 
     void Move(float delta)

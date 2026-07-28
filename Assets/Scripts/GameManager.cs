@@ -57,6 +57,8 @@ public class GameManager : MonoBehaviour
         Debug.Log("Hermes reached the end! Increasing the difficulty to " + (gameDifficulty+1));
     
         StartGame(false);
+
+        SoundManager.Instance.PlaySFX(SoundType.Win);
     }
 
     public void StartGame(Boolean restartGame)
@@ -77,6 +79,7 @@ public class GameManager : MonoBehaviour
         nameSubmitted = false;
         State = GameState.Results;
         ShowOnly(nameEntryScreen);
+        SoundManager.Instance.PlaySFX(SoundType.Lose);
         SoundManager.Instance?.CrossFadeMusic(SoundType.Theme, 1f);
     }
 
@@ -148,12 +151,16 @@ public class GameManager : MonoBehaviour
             speedBar.ResetSpeed();
 
             countdownDisplay.DisplayNumber(0);
+            SoundManager.Instance.PlaySFX(SoundType.Countdown);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayNumber(1);
+            SoundManager.Instance.PlaySFX(SoundType.Countdown);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayNumber(2);
+            SoundManager.Instance.PlaySFX(SoundType.Countdown);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayStart();
+            SoundManager.Instance.PlaySFX(SoundType.CountdownStart);
 
             speedBar.GameActive = true;
             hermes.GameActive = true;

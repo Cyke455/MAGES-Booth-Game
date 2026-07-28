@@ -304,6 +304,9 @@ MonoBehaviour:
   scrollSpeed: 2000
   speedChange: 10
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &27073145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -767,7 +770,7 @@ MonoBehaviour:
   - type: 2
     clips:
     - {fileID: 8300000, guid: c3d7674dc95f47d488feab7cb38a69c3, type: 3}
-    volume: 0.38
+    volume: 0.58
     pitch: 1
     volumeVariance: 0
     pitchVariance: 0.2
@@ -775,7 +778,7 @@ MonoBehaviour:
   - type: 3
     clips:
     - {fileID: 8300000, guid: a1e0f5f3d2c309b4b890e60e20500145, type: 3}
-    volume: 0.28
+    volume: 0.48
     pitch: 0.6
     volumeVariance: 0
     pitchVariance: 0.2
@@ -812,7 +815,23 @@ MonoBehaviour:
     volumeVariance: 0
     pitchVariance: 0.2
     loop: 1
-  sfxPoolSize: 19
+  - type: 8
+    clips:
+    - {fileID: 8300000, guid: 89ae094095025ec45a314c4d87dc33fc, type: 3}
+    volume: 0.4
+    pitch: 1
+    volumeVariance: 0
+    pitchVariance: 0.2
+    loop: 1
+  - type: 9
+    clips:
+    - {fileID: 8300000, guid: 07eaeb6608bb481419fc2b999e4df1a4, type: 3}
+    volume: 0.4
+    pitch: 1
+    volumeVariance: 0
+    pitchVariance: 0.2
+    loop: 1
+  sfxPoolSize: 21
   musicPitchSmoothTime: 0.35
   maxMusicPitchMultiplier: 1.5
 --- !u!1 &231161671
@@ -1618,6 +1637,9 @@ MonoBehaviour:
   scrollSpeed: 3500
   speedChange: 12
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &562141395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2473,6 +2495,9 @@ MonoBehaviour:
   scrollSpeed: 300
   speedChange: 5
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &790441969
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2658,6 +2683,9 @@ MonoBehaviour:
   scrollSpeed: 100
   speedChange: 5
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &898999128
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3266,6 +3294,9 @@ MonoBehaviour:
   scrollSpeed: 600
   speedChange: 100000
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &1045414151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3357,6 +3388,9 @@ MonoBehaviour:
   scrollSpeed: 800
   speedChange: 100000
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &1086300870
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3681,6 +3715,9 @@ MonoBehaviour:
   scrollSpeed: 400
   speedChange: 10
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &1167234994
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5118,6 +5155,9 @@ MonoBehaviour:
   scrollSpeed: 1000
   speedChange: 7
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &1496871477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5187,6 +5227,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HermesController
   speedMultiplier: 0.05
   distancePerPress: 0.02
+  animator: {fileID: 0}
+  gameManager: {fileID: 0}
+  minAnimSpeed: 0.15
+  maxAnimSpeed: 1.5
+  animSpeedSmoothing: 0.15
   GameActive: 1
 --- !u!4 &1571454167
 Transform:
@@ -5527,6 +5572,9 @@ MonoBehaviour:
   scrollSpeed: 200
   speedChange: 100000
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &1707671823
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -6470,6 +6518,9 @@ MonoBehaviour:
   MaxValue: 150
   barWidthPixels: 1200
   shakingElements: {fileID: 1175931883}
+  minSpeedFactor: 0.5
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!1 &1883650977
 GameObject:
   m_ObjectHideFlags: 0
