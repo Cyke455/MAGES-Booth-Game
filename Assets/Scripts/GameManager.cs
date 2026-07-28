@@ -47,6 +47,8 @@ public class GameManager : MonoBehaviour
     {
         State = GameState.Menu;
         ShowOnly(menuScreen);
+        speedBar.GameActive = false;
+        hermes.GameActive = false;
         SoundManager.Instance?.PlayMusic(SoundType.Theme);
     }
 
