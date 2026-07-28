@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Screens")]
     [SerializeField] private GameObject menuScreen;
+    [SerializeField] private GameObject modeSelectScreen;
     [SerializeField] private GameObject hudScreen;
     [SerializeField] private GameObject resultsScreen;
     [SerializeField] private GameObject nameEntryScreen;
@@ -28,7 +29,9 @@ public class GameManager : MonoBehaviour
 
 
     public GameState State { get; private set; }
+    public GameMode CurrentMode { get; private set; }
     public float FinalAveragePPS { get; private set; }
+    public int StagesCleared => scoreManager.StagesCleared;
 
     private bool isTransitioning;
     private bool nameSubmitted;
@@ -56,11 +59,32 @@ public class GameManager : MonoBehaviour
     {
         timer.StopTimer();
 
+        scoreManager.AwardStageClear(timer.TimeRemaining, timer.RoundDuration, gameDifficulty);
+
         Debug.Log("Hermes reached the end! Increasing the difficulty to " + (gameDifficulty+1));
-    
+
         StartGame(false);
 
         SoundManager.Instance.PlaySFX(SoundType.Win);
+    }
+
+    public void ShowModeSelect()
+    {
+        if (isTransitioning) return;
+
+        ShowOnly(modeSelectScreen);
+    }
+
+    public void StartSoloSprint()
+    {
+        CurrentMode = GameMode.SoloSprint;
+        StartGame(true);
+    }
+
+    public void StartRelayRace()
+    {
+        CurrentMode = GameMode.RelayRace;
+        StartGame(true);
     }
 
     public void StartGame(Boolean restartGame)
@@ -90,7 +114,7 @@ public class GameManager : MonoBehaviour
         if (nameSubmitted || State != GameState.Results) return;
         nameSubmitted = true;
 
-        leaderboard.AddEntry(playerName, scoreManager.Score, scoreManager.TotalPresses, hermes.DistanceTraveled);
+        leaderboard.AddEntry(playerName, scoreManager.Score, scoreManager.TotalPresses, hermes.DistanceTraveled, CurrentMode);
         ShowOnly(resultsScreen);
     }
 
@@ -116,6 +140,7 @@ public class GameManager : MonoBehaviour
     void ShowOnly(GameObject screen)
     {
         SetActiveIfAssigned(menuScreen, menuScreen == screen);
+        SetActiveIfAssigned(modeSelectScreen, modeSelectScreen == screen);
         SetActiveIfAssigned(hudScreen, hudScreen == screen);
         SetActiveIfAssigned(resultsScreen, resultsScreen == screen);
         SetActiveIfAssigned(nameEntryScreen, nameEntryScreen == screen);
@@ -167,7 +192,8 @@ public class GameManager : MonoBehaviour
             speedBar.GameActive = true;
             hermes.GameActive = true;
             scoreManager.GameActive = true;
-            timer.StartTimer();
+            scoreManager.OnStageStart();
+            timer.StartTimer(restartGame || CurrentMode == GameMode.RelayRace);
             State = GameState.Playing;
 
             SoundManager.Instance?.CrossFadeMusic(SoundType.GameplayTheme, 1f);

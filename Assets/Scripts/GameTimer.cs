@@ -11,10 +11,11 @@ public class GameTimer : MonoBehaviour
 
     public float TimeRemaining { get; private set; }
     public bool IsRunning { get; private set; }
+    public float RoundDuration => roundDuration;
 
-    public void StartTimer()
+    public void StartTimer(bool reset = true)
     {
-        TimeRemaining = roundDuration;
+        if (reset) TimeRemaining = roundDuration;
         IsRunning = true;
         UpdateDisplay();
     }

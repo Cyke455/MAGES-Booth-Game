@@ -71,9 +71,14 @@ public class SpeedBar : MonoBehaviour
 
     void SpeedIncrease()
     {
+        bool wasAtGoal = SpeedValue >= gameManager.winSpeed;
         SpeedValue = Mathf.Clamp(SpeedValue + speedIncrease, 0, gameManager.winSpeed);
         OnSpeedUpdate?.Invoke(SpeedValue, false);
-        if (SpeedValue >= gameManager.winSpeed) gameManager.StageClear(); 
+        if (SpeedValue >= gameManager.winSpeed && !wasAtGoal)
+        {
+            SoundManager.Instance.PlaySFX(SoundType.GoalBonus);
+            gameManager.StageClear();
+        }
     }
 
     IEnumerator SpeedDecay()

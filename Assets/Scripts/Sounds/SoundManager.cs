@@ -27,7 +27,10 @@ public enum SoundType
 
     // Countdown
     Countdown,
-    CountdownStart
+    CountdownStart,
+
+    // Gold square bonus
+    GoalBonus
 }
 
 [System.Serializable]
