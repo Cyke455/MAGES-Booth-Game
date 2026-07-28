@@ -3,9 +3,9 @@ using UnityEngine;
 
 public class MusicIntensitySync : MonoBehaviour
 {
-    [SerializeField] private float windowSeconds = 2f;
+    [SerializeField] private float windowSeconds = 3f;
     [SerializeField] private float pressesPerSecondForMaxIntensity = 6f;
-    [SerializeField] private float maxIntensityMultiplier = 1.5f;
+    [SerializeField] private float maxIntensityMultiplier = 1.2f;
 
     private readonly Queue<float> pressTimestamps = new Queue<float>();
 

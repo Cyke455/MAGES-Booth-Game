@@ -45,6 +45,12 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
+        // Presses shouldn't do anything (move Hermes, bump score, ramp the music)
+        // until a run is actually in progress.
+        speedBar.GameActive = false;
+        hermes.GameActive = false;
+        scoreManager.GameActive = false;
+
         State = GameState.Menu;
         ShowOnly(menuScreen);
         SoundManager.Instance?.PlayMusic(SoundType.Theme);
@@ -97,6 +103,10 @@ public class GameManager : MonoBehaviour
     public void ShowMainMenu()
     {
         if (isTransitioning) return;
+
+        speedBar.GameActive = false;
+        hermes.GameActive = false;
+        scoreManager.GameActive = false;
 
         State = GameState.Menu;
         ShowOnly(menuScreen);

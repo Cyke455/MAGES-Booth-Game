@@ -647,8 +647,8 @@ MonoBehaviour:
     pitchVariance: 0.2
     loop: 1
   sfxPoolSize: 19
-  musicPitchSmoothTime: 0.35
-  maxMusicPitchMultiplier: 1.5
+  musicPitchSmoothTime: 0.9
+  maxMusicPitchMultiplier: 1.2
 --- !u!1 &231161671
 GameObject:
   m_ObjectHideFlags: 0
@@ -1439,6 +1439,9 @@ MonoBehaviour:
   scrollSpeed: 6000
   speedChange: 10
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &562141395
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1459,7 +1462,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -9060334799304716209, guid: d17c9084136115f49b30960d1656a3d4, type: 3}
+  m_Sprite: {fileID: -41662275665259209, guid: 88c0dd8a2047f6643b4b66faa09a87a6, type: 3}
   m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -3127,6 +3130,7 @@ GameObject:
   - component: {fileID: 1178683112}
   - component: {fileID: 1178683111}
   - component: {fileID: 1178683113}
+  - component: {fileID: 1178683114}
   m_Layer: 5
   m_Name: Messenger
   m_TagString: Untagged
@@ -3201,7 +3205,7 @@ Animator:
   m_GameObject: {fileID: 1178683109}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 9100000, guid: 2ba9fcde6c485ba458560c4d784ebbfd, type: 2}
+  m_Controller: {fileID: 9100000, guid: 1d679cc182698784eabdb22ca9750f2a, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -3213,6 +3217,20 @@ Animator:
   m_AllowConstantClipSamplingOptimization: 1
   m_KeepAnimatorStateOnDisable: 0
   m_WriteDefaultValuesOnDisable: 0
+--- !u!114 &1178683114
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1178683109}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2e3ffbcc98a77334fa709599a995a0f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GoalIndicator
+  gameManager: {fileID: 145281}
+  animator: {fileID: 1178683113}
 --- !u!1 &1185482464
 GameObject:
   m_ObjectHideFlags: 0
@@ -4399,6 +4417,9 @@ MonoBehaviour:
   scrollSpeed: 2000
   speedChange: 10
   gameManager: {fileID: 145281}
+  minSpeedFactor: 0.15
+  maxSpeedFactor: 1.5
+  speedSmoothing: 0.15
 --- !u!114 &1496871477
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4419,7 +4440,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: -9060334799304716209, guid: d17c9084136115f49b30960d1656a3d4, type: 3}
+  m_Sprite: {fileID: 5779526367424444294, guid: d822b644b2e6de1489bf03bcfdb90680, type: 3}
   m_Type: 2
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -4468,6 +4489,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::HermesController
   speedMultiplier: 0.05
   distancePerPress: 0.02
+  animator: {fileID: 1042267140}
+  gameManager: {fileID: 145281}
+  minAnimSpeed: 0.15
+  maxAnimSpeed: 1.5
+  animSpeedSmoothing: 0.15
   GameActive: 1
 --- !u!4 &1571454167
 Transform:
@@ -4548,9 +4574,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 362f5e2be6afb1846aca169424364908, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MusicIntensitySync
-  windowSeconds: 2
+  windowSeconds: 3
   pressesPerSecondForMaxIntensity: 6
-  maxIntensityMultiplier: 1.5
+  maxIntensityMultiplier: 1.2
 --- !u!21 &1629731240
 Material:
   serializedVersion: 8

@@ -6,6 +6,13 @@ public class HermesController : MonoBehaviour
     [SerializeField] private float speedMultiplier = 0.05f;
     [SerializeField] private float distancePerPress = 0.02f;
 
+    [Header("Animation")]
+    [SerializeField] private Animator animator;
+    [SerializeField] private GameManager gameManager;
+    [SerializeField] private float minAnimSpeed = 0.15f;
+    [SerializeField] private float maxAnimSpeed = 1.5f;
+    [SerializeField] private float animSpeedSmoothing = 0.15f;
+
     public bool GameActive = true;
     public float DistanceTraveled { get; private set; }
 
@@ -31,6 +38,8 @@ public class HermesController : MonoBehaviour
 
     void Update()
     {
+        UpdateAnimationSpeed();
+
         if (!GameActive || currentSpeedValue <= 0f) return;
 
         Move(currentSpeedValue * speedMultiplier * Time.deltaTime);
@@ -54,10 +63,24 @@ public class HermesController : MonoBehaviour
         DistanceTraveled += delta;
     }
 
+    void UpdateAnimationSpeed()
+    {
+        if (animator == null || !animator.isActiveAndEnabled) return;
+
+        // Not GameActive (countdown/goal-reached) means presses aren't updating
+        // currentSpeedValue, so force the fraction down rather than leaving Hermes
+        // running in place at whatever speed he last had.
+        float fraction = GameActive && gameManager != null ? Mathf.Clamp01(currentSpeedValue / gameManager.winSpeed) : 0f;
+        float targetSpeed = Mathf.Lerp(minAnimSpeed, maxAnimSpeed, fraction);
+        float alpha = 1f - Mathf.Exp(-Time.deltaTime / animSpeedSmoothing);
+        animator.speed = Mathf.Lerp(animator.speed, targetSpeed, alpha);
+    }
+
     public void ResetHermes()
     {
         transform.position = startPosition;
         DistanceTraveled = 0f;
         currentSpeedValue = 0f;
+        if (animator != null) animator.speed = minAnimSpeed;
     }
 }
