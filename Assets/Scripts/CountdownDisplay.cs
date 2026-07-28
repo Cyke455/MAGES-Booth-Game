@@ -20,7 +20,7 @@ public class CountdownDisplay : MonoBehaviour
         runImage.enabled = false;
 
         image.sprite = numbers[number];
-        image.color = new Color(1f, 1f, 1f, 0f);
+        image.color = new Color(0.25f, 0.25f, 0.3f, 0f);
         transform.rotation = Quaternion.Euler(0, 0, 20);
         transform.localScale = new Vector3(1, 1, 1) * 0.5f;
     }
@@ -43,7 +43,7 @@ public class CountdownDisplay : MonoBehaviour
 
         float runColorAlpha = Mathf.Clamp(1f - Mathf.Exp(-Time.deltaTime / 0.4f), 0, 1);
         float runMovementAlpha = Mathf.Clamp(1f - Mathf.Exp(-Time.deltaTime / 0.5f), 0, 1);
-        runImage.color = Color.Lerp(runImage.color, new Color(1, 1, 1, 0f), runColorAlpha);
+        runImage.color = Color.Lerp(runImage.color, new Color(0.25f, 0.25f, 1.3f, 0f), runColorAlpha);
         run.localScale = Vector3.Lerp(run.localScale, new Vector3(1, 1, 1), runMovementAlpha);
         runImage.enabled = (runImage.color.a > 0.01f);
 

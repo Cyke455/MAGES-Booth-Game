@@ -139,6 +139,7 @@ public class GameManager : MonoBehaviour
             {
                 yield return new WaitForSeconds(3);
                 gameDifficulty += 1;
+                scoreManager.BankDistance();
             }
             hermes.ResetHermes();
 
@@ -153,14 +154,13 @@ public class GameManager : MonoBehaviour
             countdownDisplay.DisplayNumber(2);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayStart();
-            
+
             speedBar.GameActive = true;
             hermes.GameActive = true;
             scoreManager.GameActive = true;
             timer.StartTimer();
             State = GameState.Playing;
 
-            
             SoundManager.Instance?.CrossFadeMusic(SoundType.GameplayTheme, 1f);
         }
         finally

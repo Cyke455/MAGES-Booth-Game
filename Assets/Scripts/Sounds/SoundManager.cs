@@ -62,8 +62,8 @@ public class SoundManager : MonoBehaviour
     [SerializeField] private int sfxPoolSize = 15;
 
     [Header("Music Intensity")]
-    [SerializeField] private float musicPitchSmoothTime = 0.35f;
-    [SerializeField] private float maxMusicPitchMultiplier = 1.5f;
+    [SerializeField] private float musicPitchSmoothTime = 0.9f;
+    [SerializeField] private float maxMusicPitchMultiplier = 1.2f;
 
     private AudioSource musicSource;
     private AudioSource uiSource;

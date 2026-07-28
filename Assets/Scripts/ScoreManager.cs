@@ -18,6 +18,7 @@ public class ScoreManager : MonoBehaviour
     public int Score { get; private set; }
 
     private float roundStartTime;
+    private float bankedDistance;
 
     void OnEnable()
     {
@@ -43,7 +44,7 @@ public class ScoreManager : MonoBehaviour
 
     void RecalculateScore()
     {
-        float distance = hermes != null ? hermes.DistanceTraveled : 0f;
+        float distance = bankedDistance + (hermes != null ? hermes.DistanceTraveled : 0f);
         float score = TotalPresses * pointsPerPress + distance * pointsPerDistance;
 
         if (AveragePPS() >= comboBonusThresholdPPS)
@@ -65,7 +66,13 @@ public class ScoreManager : MonoBehaviour
     {
         TotalPresses = 0;
         Score = 0;
+        bankedDistance = 0f;
         roundStartTime = Time.time;
         if (scoreText != null) scoreText.text = "0";
+    }
+
+    public void BankDistance()
+    {
+        if (hermes != null) bankedDistance += hermes.DistanceTraveled;
     }
 }
