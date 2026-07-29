@@ -23,7 +23,14 @@ public enum SoundType
     Lose,
 
     // Win
-    Win
+    Win,
+
+    // Countdown
+    Countdown,
+    CountdownStart,
+
+    // Gold square bonus
+    GoalBonus
 }
 
 [System.Serializable]

@@ -1,40 +1,32 @@
-using System.Collections.Generic;
 using UnityEngine;
 
 public class MusicIntensitySync : MonoBehaviour
 {
-    [SerializeField] private float windowSeconds = 2f;
-    [SerializeField] private float pressesPerSecondForMaxIntensity = 6f;
+    [SerializeField] private GameManager gameManager;
     [SerializeField] private float maxIntensityMultiplier = 1.5f;
 
-    private readonly Queue<float> pressTimestamps = new Queue<float>();
+    private float currentSpeedValue;
 
     void OnEnable()
     {
-        SpeedBar.OnKeyPressed += HandleKeyPressed;
+        SpeedBar.OnSpeedUpdate += HandleSpeedUpdate;
     }
 
     void OnDisable()
     {
-        SpeedBar.OnKeyPressed -= HandleKeyPressed;
+        SpeedBar.OnSpeedUpdate -= HandleSpeedUpdate;
     }
 
-    void HandleKeyPressed()
+    void HandleSpeedUpdate(float newValue, bool instantUpdate)
     {
-        pressTimestamps.Enqueue(Time.time);
+        currentSpeedValue = newValue;
     }
 
     void Update()
     {
-        while (pressTimestamps.Count > 0 && Time.time - pressTimestamps.Peek() > windowSeconds)
-        {
-            pressTimestamps.Dequeue();
-        }
+        if (SoundManager.Instance == null || gameManager == null) return;
 
-        if (SoundManager.Instance == null) return;
-
-        float pressesPerSecond = pressTimestamps.Count / windowSeconds;
-        float t = Mathf.Clamp01(pressesPerSecond / pressesPerSecondForMaxIntensity);
+        float t = Mathf.Clamp01(currentSpeedValue / gameManager.winSpeed);
         float intensity = Mathf.Lerp(1f, maxIntensityMultiplier, t);
 
         SoundManager.Instance.SetMusicIntensity(intensity);

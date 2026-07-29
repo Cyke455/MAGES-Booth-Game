@@ -40,7 +40,7 @@ public class GameUI : MonoBehaviour
     void Update()
     {
         UpdateBarMeter(false);
-        float shakeSpeed = 6f;
+        float shakeSpeed = 10f;
         float shakeIntensity = 2f;
         float targetSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, Mathf.Clamp01(SpeedValue / gameManager.winSpeed));
         float speedAlpha = 1f - Mathf.Exp(-Time.deltaTime / speedSmoothing);
