@@ -1,9 +1,10 @@
+using Unity.VisualScripting;
 using UnityEngine;
 
-public class Parallax : MonoBehaviour
+public class Particles : MonoBehaviour
 {
-    [SerializeField] private float scrollSpeed;
-    [SerializeField] private float speedChange;
+    [SerializeField] private ParticleSystem particle;
+
     [SerializeField] private GameManager gameManager;
 
     [Header("Speed Sync")]
@@ -34,14 +35,16 @@ public class Parallax : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        float difficultyFactor = 1+((gameManager.gameDifficulty-1)/speedChange);
 
         float targetSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, Mathf.Clamp01(currentSpeedValue / gameManager.winSpeed));
         float alpha = 1f - Mathf.Exp(-Time.deltaTime / speedSmoothing);
         speedFactor = Mathf.Lerp(speedFactor, targetSpeedFactor, alpha);
 
-        currentScroll += scrollSpeed * difficultyFactor * speedFactor * Time.deltaTime;
-        currentScroll = currentScroll%1920;
-        transform.localPosition =  new Vector3(960-currentScroll, transform.localPosition.y);
+        float particleSpeed = (gameManager.gameDifficulty * speedFactor * 1.5f);
+        
+        var mainModule = particle.main;
+        
+
+        mainModule.simulationSpeed = particleSpeed;
     }
 }
