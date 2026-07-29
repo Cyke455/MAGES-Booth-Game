@@ -10,6 +10,10 @@ public class GameManager : MonoBehaviour
     public int gameDifficulty = 1;
     public int winSpeed = 150;
 
+    [Header("Round Duration")]
+    [SerializeField] private float soloSprintDuration = 45f;
+    [SerializeField] private float relayRaceDuration = 30f;
+
     [Header("System References")]
     [SerializeField] private SpeedBar speedBar;
     [SerializeField] private HermesController hermes;
@@ -78,12 +82,14 @@ public class GameManager : MonoBehaviour
     public void StartSoloSprint()
     {
         CurrentMode = GameMode.SoloSprint;
+        timer.SetRoundDuration(soloSprintDuration);
         StartGame(true);
     }
 
     public void StartRelayRace()
     {
         CurrentMode = GameMode.RelayRace;
+        timer.SetRoundDuration(relayRaceDuration);
         StartGame(true);
     }
 
@@ -121,6 +127,19 @@ public class GameManager : MonoBehaviour
     public void PlayAgain()
     {
         StartGame(true);
+    }
+
+    public void ExitResultsScreen()
+    {
+        if (State != GameState.Results) return;
+
+        // Score must be recorded before we ever leave the results screen.
+        if (!nameSubmitted)
+        {
+            SubmitName(string.Empty);
+        }
+
+        ShowMainMenu();
     }
 
     public void ShowMainMenu()

@@ -49,10 +49,25 @@ public class LeaderboardManager : MonoBehaviour
     public void AddEntry(string playerName, int score, int totalPresses, float distanceTraveled, GameMode mode)
     {
         string modeName = mode.ToString();
+        string resolvedName = string.IsNullOrWhiteSpace(playerName) ? "Player" : playerName;
+
+        LeaderboardEntry existing = data.entries.FirstOrDefault(e =>
+            e.mode == modeName && string.Equals(e.playerName, resolvedName, StringComparison.OrdinalIgnoreCase));
+
+        if (existing != null && existing.score >= score)
+        {
+            // Existing score is already at least as high; keep it and don't add a duplicate.
+            return;
+        }
+
+        if (existing != null)
+        {
+            data.entries.Remove(existing);
+        }
 
         data.entries.Add(new LeaderboardEntry
         {
-            playerName = string.IsNullOrWhiteSpace(playerName) ? "Player" : playerName,
+            playerName = resolvedName,
             score = score,
             totalPresses = totalPresses,
             distanceTraveled = distanceTraveled,

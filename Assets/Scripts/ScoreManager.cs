@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 
@@ -14,6 +15,7 @@ public class ScoreManager : MonoBehaviour
     [Header("Scoring Weights")]
     [SerializeField] private float pointsPerPress = 3f;
     [SerializeField] private float comboBonusThresholdPPS = 6f;
+    [SerializeField] private float comboWindowSeconds = 1.5f;
     [SerializeField] private float comboBonusPointsPerPress = 1f;
 
     [Header("Stage Clear Reward")]
@@ -31,8 +33,8 @@ public class ScoreManager : MonoBehaviour
     private float bankedBonus;
 
     private int pressesThisStage;
-    private float stageStartTime;
     private bool comboActiveThisStage;
+    private readonly Queue<float> recentPressTimes = new Queue<float>();
 
     void OnEnable()
     {
@@ -56,7 +58,13 @@ public class ScoreManager : MonoBehaviour
         TotalPresses++;
         pressesThisStage++;
 
-        if (!comboActiveThisStage && StagePPS() >= comboBonusThresholdPPS)
+        recentPressTimes.Enqueue(Time.time);
+        while (recentPressTimes.Count > 0 && Time.time - recentPressTimes.Peek() > comboWindowSeconds)
+        {
+            recentPressTimes.Dequeue();
+        }
+
+        if (!comboActiveThisStage && RecentPPS() >= comboBonusThresholdPPS)
         {
             comboActiveThisStage = true;
             OnComboEngaged?.Invoke();
@@ -77,10 +85,11 @@ public class ScoreManager : MonoBehaviour
         return TotalPresses / elapsed;
     }
 
-    float StagePPS()
+    float RecentPPS()
     {
-        float elapsed = Mathf.Max(Time.time - stageStartTime, 0.0001f);
-        return pressesThisStage / elapsed;
+        // Presses-per-second over the trailing window, so combo reflects a recent
+        // burst of tapping rather than an average dragged down by the whole stage.
+        return recentPressTimes.Count / comboWindowSeconds;
     }
 
     public void ResetScore()
@@ -91,14 +100,15 @@ public class ScoreManager : MonoBehaviour
         bankedDistance = 0f;
         bankedBonus = 0f;
         roundStartTime = Time.time;
+        recentPressTimes.Clear();
         if (scoreText != null) scoreText.text = "0";
     }
 
     public void OnStageStart()
     {
         pressesThisStage = 0;
-        stageStartTime = Time.time;
         comboActiveThisStage = false;
+        recentPressTimes.Clear();
     }
 
     public void AwardStageClear(float timeRemaining, float roundDuration, int difficultyAtClear)
@@ -115,6 +125,10 @@ public class ScoreManager : MonoBehaviour
 
         bankedBonus += stageBonus;
         StagesCleared++;
+
+        // Apply the bonus to the visible score immediately (Update() skips this once
+        // GameActive is turned off for the cooldown, which would otherwise delay it).
+        RecalculateScore();
 
         OnStageBonusAwarded?.Invoke(Mathf.RoundToInt(stageBonus));
     }
