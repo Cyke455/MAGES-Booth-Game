@@ -12,6 +12,7 @@ public class LeaderboardEntry
     public int totalPresses;
     public float distanceTraveled;
     public string date;
+    public string mode;
 }
 
 [Serializable]
@@ -36,20 +37,38 @@ public class LeaderboardManager : MonoBehaviour
         Load();
     }
 
-    public void AddEntry(string playerName, int score, int totalPresses, float distanceTraveled)
+    public IReadOnlyList<LeaderboardEntry> GetEntries(GameMode mode)
     {
+        string modeName = mode.ToString();
+        return data.entries
+            .Where(e => e.mode == modeName)
+            .OrderByDescending(e => e.score)
+            .ToList();
+    }
+
+    public void AddEntry(string playerName, int score, int totalPresses, float distanceTraveled, GameMode mode)
+    {
+        string modeName = mode.ToString();
+
         data.entries.Add(new LeaderboardEntry
         {
             playerName = string.IsNullOrWhiteSpace(playerName) ? "Player" : playerName,
             score = score,
             totalPresses = totalPresses,
             distanceTraveled = distanceTraveled,
-            date = DateTime.Now.ToString("yyyy-MM-dd HH:mm")
+            date = DateTime.Now.ToString("yyyy-MM-dd HH:mm"),
+            mode = modeName
         });
 
-        data.entries = data.entries
+        List<LeaderboardEntry> topForMode = data.entries
+            .Where(e => e.mode == modeName)
             .OrderByDescending(e => e.score)
             .Take(maxEntries)
+            .ToList();
+
+        data.entries = data.entries
+            .Where(e => e.mode != modeName)
+            .Concat(topForMode)
             .ToList();
 
         Save();

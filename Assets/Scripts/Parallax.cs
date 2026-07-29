@@ -35,11 +35,11 @@ public class Parallax : MonoBehaviour
     void Update()
     {
         float difficultyFactor = 1+((gameManager.gameDifficulty-1)/speedChange);
-
+    
         float targetSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, Mathf.Clamp01(currentSpeedValue / gameManager.winSpeed));
         float alpha = 1f - Mathf.Exp(-Time.deltaTime / speedSmoothing);
         speedFactor = Mathf.Lerp(speedFactor, targetSpeedFactor, alpha);
-
+        
         currentScroll += scrollSpeed * difficultyFactor * speedFactor * Time.deltaTime;
         currentScroll = currentScroll%1920;
         transform.localPosition =  new Vector3(960-currentScroll, transform.localPosition.y);

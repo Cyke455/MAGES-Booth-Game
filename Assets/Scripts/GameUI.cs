@@ -9,13 +9,19 @@ public class GameUI : MonoBehaviour
     [SerializeField] private GameManager gameManager;
 
     [SerializeField] private float barSpeed;
-    [SerializeField] private Color barColor;
+    private Color barColor;
     [SerializeField] private Image SpeedMeterBar;
     [SerializeField] private float MaxValue;
     [SerializeField] private float barWidthPixels = 1200;
     [SerializeField] private Transform shakingElements;
 
+    [Header("Speed Sync")]
+    [SerializeField] private float minSpeedFactor = 0.5f;
+    [SerializeField] private float maxSpeedFactor = 1.5f;
+    [SerializeField] private float speedSmoothing = 0.15f;
+
     private float shakeClock;
+    private float speedFactor;
 
     void OnEnable()
     {
@@ -26,12 +32,20 @@ public class GameUI : MonoBehaviour
         SpeedBar.OnSpeedUpdate -= UpdateBarValue;
     }
 
+    void Start()
+    {
+        barColor = SpeedMeterBar.color;
+    }
+
     void Update()
     {
         UpdateBarMeter(false);
         float shakeSpeed = 6f;
         float shakeIntensity = 2f;
-        shakeClock += Time.deltaTime * shakeSpeed * (1 + (gameManager.gameDifficulty - 1)*0.1f);
+        float targetSpeedFactor = Mathf.Lerp(minSpeedFactor, maxSpeedFactor, Mathf.Clamp01(SpeedValue / gameManager.winSpeed));
+        float speedAlpha = 1f - Mathf.Exp(-Time.deltaTime / speedSmoothing);
+        speedFactor = Mathf.Lerp(speedFactor, targetSpeedFactor, speedAlpha);
+        shakeClock += Time.deltaTime * shakeSpeed * speedFactor * (1 + (gameManager.gameDifficulty - 1)*0.1f);
         shakingElements.localPosition = new Vector2(Mathf.Sin(shakeClock) * shakeIntensity, Mathf.Sin(shakeClock * 1.25f) * shakeIntensity);
         shakingElements.rotation = Quaternion.Euler(0, 0, Mathf.Cos(shakeClock * 0.3f)/5);
     }
@@ -57,7 +71,6 @@ public class GameUI : MonoBehaviour
         float barWidth = barWidthPixels - (SpeedValue / MaxValue) * barWidthPixels;
         RectTransform rectTransform = SpeedMeterBar.GetComponent<RectTransform>();
         float alpha = Math.Clamp(1f - Mathf.Exp(-Time.deltaTime / barSpeed), 0, 1);
-
 
         if (instantUpdate) alpha = 1;
 

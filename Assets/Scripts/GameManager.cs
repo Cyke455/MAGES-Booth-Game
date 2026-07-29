@@ -20,6 +20,7 @@ public class GameManager : MonoBehaviour
 
     [Header("UI Screens")]
     [SerializeField] private GameObject menuScreen;
+    [SerializeField] private GameObject modeSelectScreen;
     [SerializeField] private GameObject hudScreen;
     [SerializeField] private GameObject resultsScreen;
     [SerializeField] private GameObject nameEntryScreen;
@@ -28,7 +29,9 @@ public class GameManager : MonoBehaviour
 
 
     public GameState State { get; private set; }
+    public GameMode CurrentMode { get; private set; }
     public float FinalAveragePPS { get; private set; }
+    public int StagesCleared => scoreManager.StagesCleared;
 
     private bool isTransitioning;
     private bool nameSubmitted;
@@ -45,14 +48,10 @@ public class GameManager : MonoBehaviour
 
     void Start()
     {
-        // Presses shouldn't do anything (move Hermes, bump score, ramp the music)
-        // until a run is actually in progress.
-        speedBar.GameActive = false;
-        hermes.GameActive = false;
-        scoreManager.GameActive = false;
-
         State = GameState.Menu;
         ShowOnly(menuScreen);
+        speedBar.GameActive = false;
+        hermes.GameActive = false;
         SoundManager.Instance?.PlayMusic(SoundType.Theme);
     }
 
@@ -60,9 +59,32 @@ public class GameManager : MonoBehaviour
     {
         timer.StopTimer();
 
+        scoreManager.AwardStageClear(timer.TimeRemaining, timer.RoundDuration, gameDifficulty);
+
         Debug.Log("Hermes reached the end! Increasing the difficulty to " + (gameDifficulty+1));
-    
+
         StartGame(false);
+
+        SoundManager.Instance.PlaySFX(SoundType.Win);
+    }
+
+    public void ShowModeSelect()
+    {
+        if (isTransitioning) return;
+
+        ShowOnly(modeSelectScreen);
+    }
+
+    public void StartSoloSprint()
+    {
+        CurrentMode = GameMode.SoloSprint;
+        StartGame(true);
+    }
+
+    public void StartRelayRace()
+    {
+        CurrentMode = GameMode.RelayRace;
+        StartGame(true);
     }
 
     public void StartGame(Boolean restartGame)
@@ -83,6 +105,7 @@ public class GameManager : MonoBehaviour
         nameSubmitted = false;
         State = GameState.Results;
         ShowOnly(nameEntryScreen);
+        SoundManager.Instance.PlaySFX(SoundType.Lose);
         SoundManager.Instance?.CrossFadeMusic(SoundType.Theme, 1f);
     }
 
@@ -91,7 +114,7 @@ public class GameManager : MonoBehaviour
         if (nameSubmitted || State != GameState.Results) return;
         nameSubmitted = true;
 
-        leaderboard.AddEntry(playerName, scoreManager.Score, scoreManager.TotalPresses, hermes.DistanceTraveled);
+        leaderboard.AddEntry(playerName, scoreManager.Score, scoreManager.TotalPresses, hermes.DistanceTraveled, CurrentMode);
         ShowOnly(resultsScreen);
     }
 
@@ -103,10 +126,6 @@ public class GameManager : MonoBehaviour
     public void ShowMainMenu()
     {
         if (isTransitioning) return;
-
-        speedBar.GameActive = false;
-        hermes.GameActive = false;
-        scoreManager.GameActive = false;
 
         State = GameState.Menu;
         ShowOnly(menuScreen);
@@ -121,6 +140,7 @@ public class GameManager : MonoBehaviour
     void ShowOnly(GameObject screen)
     {
         SetActiveIfAssigned(menuScreen, menuScreen == screen);
+        SetActiveIfAssigned(modeSelectScreen, modeSelectScreen == screen);
         SetActiveIfAssigned(hudScreen, hudScreen == screen);
         SetActiveIfAssigned(resultsScreen, resultsScreen == screen);
         SetActiveIfAssigned(nameEntryScreen, nameEntryScreen == screen);
@@ -158,17 +178,22 @@ public class GameManager : MonoBehaviour
             speedBar.ResetSpeed();
 
             countdownDisplay.DisplayNumber(0);
+            SoundManager.Instance.PlaySFX(SoundType.Countdown);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayNumber(1);
+            SoundManager.Instance.PlaySFX(SoundType.Countdown);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayNumber(2);
+            SoundManager.Instance.PlaySFX(SoundType.Countdown);
             yield return new WaitForSeconds(1);
             countdownDisplay.DisplayStart();
+            SoundManager.Instance.PlaySFX(SoundType.CountdownStart);
 
             speedBar.GameActive = true;
             hermes.GameActive = true;
             scoreManager.GameActive = true;
-            timer.StartTimer();
+            scoreManager.OnStageStart();
+            timer.StartTimer(restartGame || CurrentMode == GameMode.RelayRace);
             State = GameState.Playing;
 
             SoundManager.Instance?.CrossFadeMusic(SoundType.GameplayTheme, 1f);
