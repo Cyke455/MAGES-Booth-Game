@@ -421,6 +421,17 @@
                 },
                 {
                     "name": "",
+                    "id": "10a02882-28d0-4ce7-af37-f04a6a461d3b",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "Press",
+                    "processors": "",
+                    "groups": ";Keyboard&Mouse",
+                    "action": "Interact",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
                     "id": "b3f66d0b-7751-423f-908b-a11c5bd95930",
                     "path": "<Gamepad>/buttonNorth",
                     "interactions": "",
